@@ -20,6 +20,9 @@ public class ClassCache {
      * 添加缓存
      */
     public static <T> ClassMetadata<T> put(Class<T> type) {
+        if (type == null) {
+            throw new ClassCacheException("添加类元缓存时 CLASS 不能为空");
+        }
         ClassMetadata<T> classMetadata = new ClassMetadata<>(type);
         cache.put(type.getName(), classMetadata);
 
@@ -31,6 +34,9 @@ public class ClassCache {
      */
     @SuppressWarnings("unchecked")
     public static <T> ClassMetadata<T> get(Class<T> type) {
+        if (type == null) {
+            throw new ClassCacheException("获取类元缓存时 CLASS 不能为空");
+        }
         String className = type.getName();
         if (type.getClassLoader() == null
                 || className.startsWith("java.")
@@ -38,7 +44,7 @@ public class ClassCache {
                 || className.startsWith("jdk.")
                 || className.startsWith("sun.")
                 || className.startsWith("com.sun.")) {
-            throw new IllegalArgumentException("不能缓存平台类型: " + className);
+            throw new ClassCacheException("不能缓存平台类型: " + className);
         }
 
         ClassMetadata<T> classMetadata = (ClassMetadata<T>) cache.get(className);
@@ -53,6 +59,9 @@ public class ClassCache {
      */
     @SuppressWarnings("unchecked")
     public static <T> FieldMetadata getField(Class<T> type, String fieldName) {
+        if (type == null) {
+            throw new ClassCacheException("获取字段时 CLASS 不能为空");
+        }
         String className = type.getName();
         ClassMetadata<T> classMetadata = (ClassMetadata<T>) cache.get(className);
         if (classMetadata == null) {
@@ -66,6 +75,9 @@ public class ClassCache {
      */
     @SuppressWarnings("unchecked")
     public static <T> ConstructorMetadata<T> getConstructor(Class<T> type, Class<?>... paramTypes) {
+        if (type == null) {
+            throw new ClassCacheException("获取构造器时 CLASS 不能为空");
+        }
         String className = type.getName();
         ClassMetadata<T> classMetadata = (ClassMetadata<T>) cache.get(className);
         if (classMetadata == null) {
@@ -79,6 +91,9 @@ public class ClassCache {
      */
     @SuppressWarnings("unchecked")
     public static <T> MethodMetadata getMethod(Class<T> type, String methodName, Class<?>... paramTypes) {
+        if (type == null || methodName == null) {
+            throw new ClassCacheException("获取方法时 CLASS 或 methodName 不能为空");
+        }
         String className = type.getName();
         ClassMetadata<T> classMetadata = (ClassMetadata<T>) cache.get(className);
         if (classMetadata == null) {
