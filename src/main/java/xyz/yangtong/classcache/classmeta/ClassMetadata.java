@@ -13,8 +13,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * created by yangtong on 2025/4/15 13:22:07
- * <br/>
  * 类元数据
  */
 public class ClassMetadata<T> {

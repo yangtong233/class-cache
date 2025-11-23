@@ -12,8 +12,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
- * created by yangtong on 2025/4/15 13:15:41
- * <br/>
  * 基于LambdaMetafactory实现的调用
  */
 

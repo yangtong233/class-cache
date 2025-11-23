@@ -1,7 +1,11 @@
 package xyz.yangtong.classcache.classmeta;
 
 
+import xyz.yangtong.classcache.ClassCacheException;
+
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -10,7 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * created by yangtong on 2025/4/15 16:54:24
  * 字段元数据
  */
 public class FieldMetadata {
@@ -37,6 +40,12 @@ public class FieldMetadata {
      */
     private final int modifiers;
 
+    /**
+     * MethodHandle 用于优化字段访问
+     */
+    private final MethodHandle getter;
+    private final MethodHandle setter;
+
     public FieldMetadata(Field sourceField) {
         this.name = sourceField.getName();
         this.sourceField = sourceField;
@@ -44,18 +53,28 @@ public class FieldMetadata {
         this.modifiers = sourceField.getModifiers();
         this.annotations = Arrays.stream(sourceField.getAnnotations())
                 .collect(Collectors.toMap(Annotation::annotationType, a -> a));
+
+        // 获取 MethodHandles.Lookup 实例
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        // 使用 MethodHandles 获取 getter 和 setter 方法的句柄
+        try {
+            getter = lookup.unreflectGetter(sourceField);
+            setter = lookup.unreflectSetter(sourceField);
+        } catch (IllegalAccessException e) {
+            throw new ClassCacheException(e);
+        }
+
     }
 
     /**
-     * 获取 obj 对象的字段值（内部使用 VarHandle）
+     * 获取 obj 对象的字段值
      */
     public <T> Object get(T obj) throws IllegalAccessException {
         try {
-            return sourceField.get(obj);
+            return getter.invoke(obj);
         } catch (IllegalAccessException e) {
-            throw e; // 句柄初始化阶段的访问异常
+            throw e;
         } catch (Throwable t) {
-            // VarHandle 的 get 本身不抛受检异常，这里统一转成 IllegalAccessException 以兼容原签名
             IllegalAccessException iae = new IllegalAccessException(t.getMessage());
             iae.initCause(t);
             throw iae;
@@ -63,11 +82,11 @@ public class FieldMetadata {
     }
 
     /**
-     * 设置 obj 对象的字段值（同样使用 VarHandle）
+     * 设置 obj 对象的字段值
      */
     public <T> void set(T obj, Object value) throws IllegalAccessException {
         try {
-            sourceField.set(obj, value);
+            setter.invoke(obj, value);
         } catch (IllegalAccessException e) {
             throw e;
         } catch (Throwable t) {

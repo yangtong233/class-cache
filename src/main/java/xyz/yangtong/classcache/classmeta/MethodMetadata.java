@@ -76,7 +76,6 @@ public class MethodMetadata {
         this.modifiers = method.getModifiers();
 
         Parameter[] params = method.getParameters();
-        Class<?>[] types = method.getParameterTypes();
         Annotation[][] paramAnn = method.getParameterAnnotations();
         for (int i = 0; i < params.length; i++) {
             Parameter param = params[i];

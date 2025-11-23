@@ -14,7 +14,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * created by yangtong on 2025/5/24 23:10:09
  * 构造器元数据
  */
 public class ConstructorMetadata<T> {
