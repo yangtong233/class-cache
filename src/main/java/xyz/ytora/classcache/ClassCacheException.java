@@ -1,4 +1,4 @@
-package xyz.yangtong.classcache;
+package xyz.ytora.classcache;
 
 /**
  * 异常类

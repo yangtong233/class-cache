@@ -1,7 +1,7 @@
-package xyz.yangtong.classcache.classmeta;
+package xyz.ytora.classcache.classmeta;
 
 
-import xyz.yangtong.classcache.ClassCacheException;
+import xyz.ytora.classcache.ClassCacheException;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;

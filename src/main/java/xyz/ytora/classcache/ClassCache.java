@@ -1,10 +1,10 @@
-package xyz.yangtong.classcache;
+package xyz.ytora.classcache;
 
 
-import xyz.yangtong.classcache.classmeta.ClassMetadata;
-import xyz.yangtong.classcache.classmeta.ConstructorMetadata;
-import xyz.yangtong.classcache.classmeta.FieldMetadata;
-import xyz.yangtong.classcache.classmeta.MethodMetadata;
+import xyz.ytora.classcache.classmeta.ClassMetadata;
+import xyz.ytora.classcache.classmeta.ConstructorMetadata;
+import xyz.ytora.classcache.classmeta.FieldMetadata;
+import xyz.ytora.classcache.classmeta.MethodMetadata;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClassCache {
 
     private static final Map<String, ClassMetadata<?>> cache = new ConcurrentHashMap<>();
+
+    /**
+     * 获取原始缓存
+     */
+    public static Map<String, ClassMetadata<?>> getSourceCache() {
+        return cache;
+    }
 
     /**
      * 添加缓存

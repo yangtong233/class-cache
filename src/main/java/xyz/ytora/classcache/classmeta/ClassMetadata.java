@@ -1,8 +1,7 @@
-package xyz.yangtong.classcache.classmeta;
+package xyz.ytora.classcache.classmeta;
 
 
-import xyz.yangtong.classcache.ClassCacheException;
-import xyz.yangtong.classcache.invoke.Reflects;
+import xyz.ytora.classcache.ClassCacheException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -16,6 +15,20 @@ import java.util.stream.Collectors;
  * 类元数据
  */
 public class ClassMetadata<T> {
+
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = new HashMap<>();
+
+    {
+        PRIMITIVE_TO_WRAPPER.put(boolean.class, Boolean.class);
+        PRIMITIVE_TO_WRAPPER.put(byte.class, Byte.class);
+        PRIMITIVE_TO_WRAPPER.put(char.class, Character.class);
+        PRIMITIVE_TO_WRAPPER.put(short.class, Short.class);
+        PRIMITIVE_TO_WRAPPER.put(int.class, Integer.class);
+        PRIMITIVE_TO_WRAPPER.put(long.class, Long.class);
+        PRIMITIVE_TO_WRAPPER.put(float.class, Float.class);
+        PRIMITIVE_TO_WRAPPER.put(double.class, Double.class);
+        PRIMITIVE_TO_WRAPPER.put(void.class, Void.class);
+    }
 
     /**
      * 类对象
@@ -207,7 +220,8 @@ public class ClassMetadata<T> {
         //需要编译参数加 -parameters 参数才能获得参数名称
         for (Class<?> parameterType : parameterTypes) {
             //如果是基本类型，就转换为包装类型
-            Class<?> realType = Reflects.primitiveToWrapper(parameterType);
+//            Class<?> realType = Reflects.primitiveToWrapper(parameterType);
+            Class<?> realType = parameterType.isPrimitive() ? PRIMITIVE_TO_WRAPPER.get(parameterType) : parameterType;
             sj.add(realType.getName());
         }
         return methodName + "(" + sj + ")";
